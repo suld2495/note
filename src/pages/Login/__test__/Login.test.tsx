@@ -16,7 +16,7 @@ describe('Login', () => {
     const idAlert = screen.queryByText('아이디를 입력하세요');
     expect(idAlert).not.toBeInTheDocument();
 
-    const passwordAlert = screen.queryByText('아이디를 입력하세요');
+    const passwordAlert = screen.queryByText('비밀번호를 입력하세요');
     expect(passwordAlert).not.toBeInTheDocument();
 
     const button = screen.getByRole('button', { name: '로그인' });
@@ -33,10 +33,10 @@ describe('Login', () => {
     render(<Login />, { wrapper: RecoilRoot });
 
     const idInput = screen.getByLabelText('아이디');
-    userEvent.type(idInput, '아이디');
+    userEvent.type(idInput, '잘못된 아이디');
 
     const passwordInput = screen.getByLabelText('비밀번호');
-    userEvent.type(passwordInput, '비밀번호');
+    userEvent.type(passwordInput, '잘못된 비밀번호');
 
     const button = screen.getByRole('button', { name: '로그인' });
     userEvent.click(button);
@@ -44,4 +44,24 @@ describe('Login', () => {
     const alert = await screen.findByText('아이디 또는 비밀번호가 오류입니다.');
     expect(alert).toBeInTheDocument();
   });
+
+  test('정상적인 아이디와 비밀번호 입력 시 메인 페이지로 이동한다.', async () => {
+    render(<Login />, { wrapper: RecoilRoot });
+
+    const idInput = screen.getByLabelText('아이디');
+    userEvent.type(idInput, '정상 아이디');
+
+    const passwordInput = screen.getByLabelText('비밀번호');
+    userEvent.type(passwordInput, '정상 비밀번호');
+
+    const button = screen.getByRole('button', { name: '로그인' });
+    userEvent.click(button);
+
+    await waitFor(() => {
+      expect(global.location.pathname).toBe('/')
+    });
+
+    const loginedId = screen.getByText('로그인 된 아이디');
+    expect(loginedId).toBeInTheDocument();
+  })
 });

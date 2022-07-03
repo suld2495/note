@@ -5,11 +5,7 @@ const request = <T>(method: Method, url: string, data: T) => {
     method,
     url,
     data,
-  })
-    .then((response) => response)
-    .catch((error) => {
-      throw new Error(error);
-    });
+  }).then((response) => response)
 };
 
 export default request;
