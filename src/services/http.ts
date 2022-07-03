@@ -5,7 +5,7 @@ const request = <T>(method: Method, url: string, data: T) => {
     method,
     url,
     data,
-  }).then((response) => response)
+  }).then((response) => response.data);
 };
 
 export default request;

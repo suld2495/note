@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { RecoilRoot } from 'recoil';
+import { MemoryRouter } from 'react-router-dom';
 import Login from '../Login';
 
 describe('Login', () => {
@@ -46,7 +47,12 @@ describe('Login', () => {
   });
 
   test('정상적인 아이디와 비밀번호 입력 시 메인 페이지로 이동한다.', async () => {
-    render(<Login />, { wrapper: RecoilRoot });
+    render(
+      <MemoryRouter basename="/login" initialEntries={['/login']}>
+        <Login />
+      </MemoryRouter>,
+      { wrapper: RecoilRoot }
+    );
 
     const idInput = screen.getByLabelText('아이디');
     userEvent.type(idInput, '정상 아이디');
@@ -58,10 +64,7 @@ describe('Login', () => {
     userEvent.click(button);
 
     await waitFor(() => {
-      expect(global.location.pathname).toBe('/')
+      expect(global.location.pathname).toBe('/');
     });
-
-    const loginedId = screen.getByText('로그인 된 아이디');
-    expect(loginedId).toBeInTheDocument();
-  })
+  });
 });
